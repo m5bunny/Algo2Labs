@@ -1,3 +1,5 @@
+#ifndef DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
+#define DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #include <sstream>
 #include <random>
 
@@ -168,17 +170,4 @@ void Dynamic_array<T>::doQsort(int start, int end, comparator_func comp)
         doQsort(back_it + 1, end, comp);
     }
 }
-
-
-#ifndef DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
-#define DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #endif //DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
-
-
-
-
-#ifndef Dynamic_array_h
-#define Dynamic_array_h
-
-
-#endif /* Dynamic_array_h */
