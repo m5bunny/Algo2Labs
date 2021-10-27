@@ -1,3 +1,5 @@
+#ifndef BS_TREE_BS_TREE_H
+#define BS_TREE_BS_TREE_H
 template<typename T>
 class BS_tree {
     
@@ -304,7 +306,4 @@ const T * BS_tree<T>::find(const T & _data, comparator_func comp)
     else
         return nullptr;
 };
-
-#ifndef BS_TREE_BS_TREE_H
-#define BS_TREE_BS_TREE_H
 #endif //BS_TREE_BS_TREE_H
