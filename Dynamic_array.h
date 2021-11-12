@@ -6,6 +6,7 @@
 template<typename T>
 class Dynamic_array
 {
+    using delete_data_func = void (T & param);
     using comparator_func = bool(*)(const T &, const T &);
     using obj_to_str_func = std::string(*)(const T &);
     
@@ -16,7 +17,6 @@ class Dynamic_array
     int capacity;
     T * array;
     
-    void doRemove_elemetns();
     void doQsort(int start, int end, comparator_func comp);
     
 public:
@@ -24,7 +24,7 @@ public:
     ~Dynamic_array();
     
     void push_back(const T & el);
-    void clear(bool is_clear_data = false);
+    void clear(delete_data_func del_dat = nullptr);
     void shrink(int shrink_to = -1);
     void sort(comparator_func comp = def_more_comparator);
     void qsort(comparator_func comp = def_more_comparator) { doQsort(0, size - 1, comp); };
@@ -70,18 +70,12 @@ T & Dynamic_array<T>::operator[](int i)
     return const_cast<T &>(const_cast<const Dynamic_array &>(*this).operator[](i));
 }
 
-template <typename T>
-void Dynamic_array<T>::doRemove_elemetns()
-{
-    for (int i{}; i < size; ++i)
-        delete reinterpret_cast<T *>(array[i]);
-}
-
 template<typename T>
-void Dynamic_array<T>::clear(bool is_clear_data)
+void Dynamic_array<T>::clear(delete_data_func del_dat)
 {
-    if (is_clear_data)
-        doRemove_elemetns();
+    if (del_dat != nullptr)
+       for (int i{}; i < size; ++i)
+        del_dat(array[i]);
     size = 0;
 }
 
