@@ -7,6 +7,7 @@ class Linked_list
 {
     using comparator_func = bool(*)(const T &, const T &);
     using to_cout_func = std::string(*)(const T &);
+    using delete_data_func = void (T & param);
     
     struct List_item
     {
@@ -24,7 +25,7 @@ class Linked_list
     List_item * const doFind(const T & _data, comparator_func comp);
     List_item * const find_insertby_item(const T & _data, comparator_func comp);
     void add_first(const T & _data);
-    void remove_last(bool clear_data);
+    void remove_last(delete_data_func del_dat);
     
     static bool def_equal_comparator(const T & lhs, const T & rhs) { return lhs == rhs; }
     static bool def_less_comparator(const T & lhs, const T & rhs) { return lhs <= rhs; }
@@ -39,8 +40,8 @@ public:
     void add_front(const T & _data);
     void add_in_order(const T & _data, comparator_func comp = def_less_comparator);
     
-    void remove_back(bool clear_data = false);
-    void remove_front(bool clear_data = false);
+    void remove_back(delete_data_func del_dat = nullptr);
+    void remove_front(delete_data_func del_dat = nullptr);
     
     const T & get(int index) const
     {
@@ -52,9 +53,9 @@ public:
     {
         return &(const_cast<Linked_list *>(this)->doFind(_data, comp)->data);
     }
-    bool find_and_remove(const T & _data, bool clear_data = false,comparator_func comp = def_equal_comparator);
+    bool find_and_remove(const T & _data, delete_data_func del_dat = nullptr, comparator_func comp = def_equal_comparator);
     
-    void clear(bool clear_data = false);
+    void clear(delete_data_func del_dat = nullptr);
     std::string to_stirng(int amount, to_cout_func func = def_to_cout_func) const;
 };
 
@@ -101,17 +102,17 @@ void Linked_list<T>::add_front(const T &_data)
 }
 
 template<typename T>
-void Linked_list<T>::remove_last(bool clear_data)
+void Linked_list<T>::remove_last(delete_data_func del_dat)
 {
-    if (clear_data)
-        delete head->data;
+    if (del_dat != nullptr)
+        del_dat(head->data);
     delete head;
     head = tail = nullptr;
     size = 0;
 }
 
 template<typename T>
-void Linked_list<T>::remove_back(bool clear_data)
+void Linked_list<T>::remove_back(delete_data_func del_dat)
 {
     if (size != 0)
     {
@@ -120,22 +121,22 @@ void Linked_list<T>::remove_back(bool clear_data)
             List_item * temp = tail->prev;
             temp->next = nullptr;
             
-            if (clear_data)
-                delete tail->data;
+            if (del_dat != nullptr)
+                del_dat(tail->data);
             delete tail;
             
             tail = temp;
             --size;
         }
         else
-            remove_last(clear_data);
+            remove_last(del_dat);
     }
     else
         throw "the list is empty";
 }
 
 template<typename T>
-void Linked_list<T>::remove_front(bool clear_data)
+void Linked_list<T>::remove_front(delete_data_func del_dat)
 {
     if (size != 0)
     {
@@ -144,15 +145,15 @@ void Linked_list<T>::remove_front(bool clear_data)
             List_item * temp = head->next;
             temp->prev = nullptr;
             
-            if (clear_data)
-                delete head->data;
+            if (del_dat != nullptr)
+                del_dat(head->data);
             delete head;
             
             head = temp;
             --size;
         }
         else
-            remove_last();
+            remove_last(del_dat);
     }
     else
         throw "the list is empty";
@@ -212,13 +213,13 @@ typename Linked_list<T>::List_item * const Linked_list<T>::doFind(const T & _dat
 }
 
 template<typename T>
-bool Linked_list<T>::find_and_remove(const T & _data, bool clear_data, comparator_func comp)
+bool Linked_list<T>::find_and_remove(const T & _data, delete_data_func del_dat, comparator_func comp)
 {
     List_item * remove_item = doFind(_data, comp);
     if (remove_item != nullptr)
     {
         if (size == 1)
-            remove_last(clear_data);
+            remove_last(del_dat);
         else
         {
             if (remove_item == head)
@@ -236,8 +237,8 @@ bool Linked_list<T>::find_and_remove(const T & _data, bool clear_data, comparato
             else
                 remove_item->next->prev = remove_item->prev;
             
-            if (clear_data)
-                delete remove_item->data;
+            if (del_dat != nullptr)
+                 del_dat(remove_item->data);
             delete remove_item;
             --size;
         }
@@ -297,7 +298,7 @@ void Linked_list<T>::add_in_order(const T & _data, comparator_func comp)
 }
 
 template<typename T>
-void Linked_list<T>::clear(bool clear_data)
+void Linked_list<T>::clear(delete_data_func del_dat)
 {
     List_item * remove_item;
     while (size)
@@ -305,8 +306,8 @@ void Linked_list<T>::clear(bool clear_data)
         remove_item = head;
         head = head->next; 
         
-        if (clear_data)
-            delete remove_item->data;
+        if (del_dat != nullptr)
+            del_dat(remove_item->data);
         delete remove_item;
         
         if (size - 1)
