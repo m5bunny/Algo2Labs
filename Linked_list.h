@@ -42,6 +42,7 @@ public:
     
     void remove_back(delete_data_func del_dat = nullptr);
     void remove_front(delete_data_func del_dat = nullptr);
+    int get_size() { return size; }
     
     const T & get(int index) const
     {
@@ -238,7 +239,7 @@ bool Linked_list<T>::find_and_remove(const T & _data, delete_data_func del_dat, 
                 remove_item->next->prev = remove_item->prev;
             
             if (del_dat != nullptr)
-                 del_dat(remove_item->data);
+                del_dat(remove_item->data);
             delete remove_item;
             --size;
         }
@@ -304,7 +305,7 @@ void Linked_list<T>::clear(delete_data_func del_dat)
     while (size)
     {
         remove_item = head;
-        head = head->next; 
+        head = head->next;
         
         if (del_dat != nullptr)
             del_dat(remove_item->data);
