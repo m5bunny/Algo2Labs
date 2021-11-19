@@ -24,6 +24,7 @@ public:
     ~Dynamic_array();
     
     void push_back(const T & el);
+    T pop_back(delete_data_func del_dat = nullptr);
     void clear(delete_data_func del_dat = nullptr);
     void shrink(int shrink_to = -1);
     void sort(comparator_func comp = def_more_comparator);
@@ -57,6 +58,16 @@ void Dynamic_array<T>::push_back(const T & el)
 }
 
 template<typename T>
+T Dynamic_array<T>::pop_back(delete_data_func del_dat)
+{
+    T result = array[size - 1];
+    if (del_dat != nullptr)
+        del_dat(array[size - 1]);
+    --size;
+    return result;
+}
+
+template<typename T>
 const T & Dynamic_array<T>::operator[](int i) const
 {
     if (i < 0 || i >= size)
@@ -74,8 +85,8 @@ template<typename T>
 void Dynamic_array<T>::clear(delete_data_func del_dat)
 {
     if (del_dat != nullptr)
-       for (int i{}; i < size; ++i)
-        del_dat(array[i]);
+        for (int i{}; i < size; ++i)
+            del_dat(array[i]);
     size = 0;
 }
 
@@ -133,7 +144,7 @@ std::string Dynamic_array<T>::to_string(int amount, obj_to_str_func ots) const
     {
         ss << i << ". " << ots(array[i]) << ";\n";
     }
-
+    
     return ss.str();
 }
 
@@ -159,7 +170,7 @@ void Dynamic_array<T>::doQsort(int start, int end, comparator_func comp)
             }
             
         }
-    
+        
         doQsort(start, back_it, comp);
         doQsort(back_it + 1, end, comp);
     }
