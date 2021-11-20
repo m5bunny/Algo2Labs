@@ -95,8 +95,10 @@ void Dynamic_array<T>::shrink(int shrink_to)
 {
     if (shrink_to > -1)
         capacity = shrink_to;
-    else
+    else if (size > 0)
         capacity = size;
+    else
+        capacity = 1;
     
     T * temp_arr = array;
     array = new T[capacity];
