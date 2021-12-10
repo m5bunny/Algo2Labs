@@ -1,4 +1,4 @@
-
+#ifndef BINARY_HEAP_D_A_H_
 #include "Dynamic_array.h"
 
 template<typename T>
@@ -9,7 +9,6 @@ private:
     using comparator_func = bool(*)(const T &, const T &);
     using obj_to_str_func = std::string(*)(const T &);
     
-    static bool def_more_comp(const T & lhs, const T & rhs) { return lhs > rhs; }
     static std::string def_obj_to_str(const T & lhs) { return std::to_string(lhs); }
     
     Dynamic_array<T> * heap_array;
@@ -25,6 +24,7 @@ private:
     int get_left_ch_index(int el_index) { return 2 * el_index + 1; }
     int get_right_ch_index(int el_index) { return 2 * el_index + 2; }
 public:
+     static bool def_more_comp(const T & lhs, const T & rhs) { return lhs > rhs; }
     
     Binary_heap_D_A(comparator_func _comp = def_more_comp);
     Binary_heap_D_A(T * _array, int _size, bool _fix = true, comparator_func _comp = def_more_comp);
@@ -32,7 +32,7 @@ public:
     void insert(const T & el);
     T pop_root(delete_data_func del_dat = nullptr);
     void sort();
-    void remove_arr_ptr();
+    T * remove_arr_ptr();
     void clear(delete_data_func del_dat = nullptr);
     
     std::string to_string(int n = -1, obj_to_str_func ots = def_obj_to_str);
@@ -187,10 +187,9 @@ void Binary_heap_D_A<T>::sort()
 }
 
 template<typename T>
-void Binary_heap_D_A<T>::remove_arr_ptr()
+T * Binary_heap_D_A<T>::remove_arr_ptr()
 {
-    heap_array->get_array();
+    return heap_array->get_array();
 }
-#ifndef BINARY_HEAP_D_A_H_
 #define BINARY_HEAP_D_A_H_
 #endif
