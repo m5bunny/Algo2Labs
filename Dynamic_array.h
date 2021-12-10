@@ -21,6 +21,7 @@ class Dynamic_array
     
 public:
     explicit Dynamic_array(int _capacity = 1);
+    Dynamic_array(T * _array, int _size);
     ~Dynamic_array();
     
     void push_back(const T & el);
@@ -30,6 +31,7 @@ public:
     void sort(comparator_func comp = def_more_comparator);
     void qsort(comparator_func comp = def_more_comparator) { doQsort(0, size - 1, comp); };
     int get_size() const { return size; };
+    T * get_array();
     std::string to_string(int amount = -1, obj_to_str_func ots = def_obj_to_str_func) const;
     
     const T & operator[](int i) const;
@@ -38,6 +40,8 @@ public:
 
 template<typename T>
 Dynamic_array<T>::Dynamic_array(int _capacity) : size(0), capacity(_capacity), array(new T[capacity]) { }
+template<typename T>
+Dynamic_array<T>::Dynamic_array(T * _array, int _size) : size(_size), capacity(size), array(_array) {}
 template<typename T>
 Dynamic_array<T>::~Dynamic_array() { delete[] array; }
 
@@ -150,7 +154,7 @@ std::string Dynamic_array<T>::to_string(int amount, obj_to_str_func ots) const
     return ss.str();
 }
 
-template <typename T>
+template<typename T>
 void Dynamic_array<T>::doQsort(int start, int end, comparator_func comp)
 {
     if (start < end)
@@ -176,5 +180,13 @@ void Dynamic_array<T>::doQsort(int start, int end, comparator_func comp)
         doQsort(start, back_it, comp);
         doQsort(back_it + 1, end, comp);
     }
+}
+
+template<typename T>
+T * Dynamic_array<T>::get_array()
+{
+    T * result = array;
+    array = nullptr;
+    return result;
 }
 #endif //DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
