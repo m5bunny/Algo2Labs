@@ -1,7 +1,6 @@
 #ifndef DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #define DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #include <sstream>
-#include <random>
 
 template<typename T>
 class Dynamic_array
@@ -187,6 +186,7 @@ T * Dynamic_array<T>::get_array()
 {
     T * result = array;
     array = nullptr;
+    size = capacity = 0;
     return result;
 }
 #endif //DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
