@@ -26,6 +26,7 @@ void counting_sort(int * _arr, int _n, int _m)
             ++j;
         }
     }
+    delete[] counters;
 }
 
 template<typename T>
