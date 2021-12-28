@@ -21,6 +21,8 @@ class Dynamic_array
 public:
     explicit Dynamic_array(int _capacity = 1);
     Dynamic_array(T * _array, int _size);
+    Dynamic_array(const Dynamic_array & _array);
+    Dynamic_array & operator=(const Dynamic_array & _array);
     ~Dynamic_array();
     
     void push_back(const T & el);
@@ -31,6 +33,7 @@ public:
     void qsort(comparator_func comp = def_more_comparator) { doQsort(0, size - 1, comp); };
     int get_size() const { return size; };
     T * get_array();
+    T * get_array_without_remove();
     std::string to_string(int amount = -1, obj_to_str_func ots = def_obj_to_str_func) const;
     
     const T & operator[](int i) const;
@@ -38,11 +41,32 @@ public:
 };
 
 template<typename T>
-Dynamic_array<T>::Dynamic_array(int _capacity) : size(0), capacity(_capacity), array(new T[capacity]) { }
+Dynamic_array<T>::Dynamic_array(int _capacity) : size(0), capacity(_capacity), array(new T[capacity]) {}
 template<typename T>
 Dynamic_array<T>::Dynamic_array(T * _array, int _size) : size(_size), capacity(size), array(_array) {}
 template<typename T>
 Dynamic_array<T>::~Dynamic_array() { delete[] array; }
+
+template<typename T>
+Dynamic_array<T>::Dynamic_array(const Dynamic_array & _array) : size(_array.size), capacity(_array.capacity), array(new T[capacity])
+{
+    for (int i{}; i < size; ++i)
+        array[i] = _array.array[i];
+}
+
+template<typename T>
+Dynamic_array<T> & Dynamic_array<T>::operator=(const Dynamic_array<T> & _array)
+{
+    if (this == &_array)
+        return *this;
+    size = _array.size;
+    capacity = _array.capacity;
+    delete[] array;
+    array = new T[capacity];
+    for (int i{}; i < size; ++i)
+        array[i] = _array.array[i];
+    return *this;
+}
 
 template<typename T>
 void Dynamic_array<T>::push_back(const T & el)
@@ -188,5 +212,11 @@ T * Dynamic_array<T>::get_array()
     array = nullptr;
     size = capacity = 0;
     return result;
+}
+
+template<typename T>
+T * Dynamic_array<T>::get_array_without_remove()
+{
+    return array;
 }
 #endif //DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
