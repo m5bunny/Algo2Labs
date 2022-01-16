@@ -1,6 +1,7 @@
 #ifndef DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #define DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
 #include <sstream>
+#include <stdexcept>
 
 template<typename T>
 class Dynamic_array
@@ -35,6 +36,7 @@ public:
     T * get_array();
     T * get_array_without_remove();
     std::string to_string(int amount = -1, obj_to_str_func ots = def_obj_to_str_func) const;
+    void remove_element(int index, delete_data_func del_dat = nullptr);
     
     const T & operator[](int i) const;
     T & operator[](int i);
@@ -218,5 +220,18 @@ template<typename T>
 T * Dynamic_array<T>::get_array_without_remove()
 {
     return array;
+}
+
+template<typename T>
+void Dynamic_array<T>::remove_element(int index, delete_data_func del_dat)
+{
+    if (index < 0 || index > (size - 1))
+        throw std::out_of_range("Out of range");
+
+    --size;
+    if (del_dat)
+        del_dat(array[index]);
+    for (int i{ index }; i < size; ++i)
+        array[i] = array[i + 1];
 }
 #endif //DYNAMIC_ARRAY_DYNAMIC_ARRAY_H_
